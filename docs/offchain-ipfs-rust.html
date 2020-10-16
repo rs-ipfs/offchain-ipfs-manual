@@ -174,6 +174,43 @@ sp-keyring = { version = &quot;2.0.0&quot;, default-features = false }
 use sp_keyring::AccountKeyring;
 use substrate_subxt::{Call, ClientBuilder, EventsDecoder, NodeTemplateRuntime, PairSigner};
 
+#[async_std::main]
+async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    // Signer for the extrinsic
+    let signer = PairSigner::&lt;NodeTemplateRuntime, _&gt;::new(AccountKeyring::Alice.pair());
+    // API client, default to connect to 127.0.0.1:9944
+    let client = ClientBuilder::&lt;NodeTemplateRuntime&gt;::new().build().await?;
+
+    // Example CID for the example bytes added vec![1, 2, 3, 4]
+    let cid = String::from(&quot;QmRgctVSR8hvGRDLv7c5H7BCji7m1VXRfEE1vW78CFagD7&quot;)
+        .into_bytes()
+        .to_vec();
+    // Example multiaddr to connect IPFS with
+    let multiaddr = String::from(
+        &quot;/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ&quot;,
+    )
+    .into_bytes()
+    .to_vec();
+    // Example Peer Id
+    let peer_id = String::from(&quot;QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ&quot;)
+        .into_bytes()
+        .to_vec();
+
+    // Begin to submit extrinsics
+    // ipfs_add_bytes
+    let add_bytes = client
+        .watch(
+            AddBytesCall {
+                data: vec![1, 2, 3, 4],
+            },
+            &amp;signer,
+        )
+        .await?;
+    println!(&quot;\nResult for ipfs_add_bytes: {:?}&quot;, add_bytes);
+
+    Ok(())
+}
+
 #[derive(Encode)]
 pub struct AddBytesCall {
     data: Vec&lt;u8&gt;,
@@ -185,26 +222,6 @@ impl Call&lt;NodeTemplateRuntime&gt; for AddBytesCall {
     fn events_decoder(_decoder: &amp;mut EventsDecoder&lt;NodeTemplateRuntime&gt;) {}
 }
 
-#[async_std::main]
-async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
-    let signer = PairSigner::&lt;NodeTemplateRuntime, _&gt;::new(AccountKeyring::Alice.pair());
-    let client = ClientBuilder::&lt;NodeTemplateRuntime&gt;::new().build().await?;
-    let metadata = client.metadata();
-    let event_decoder = EventsDecoder::&lt;NodeTemplateRuntime&gt;::new(metadata.clone());
-
-    let add_bytes_call = AddBytesCall {
-        data: vec![1, 2, 3, 4],
-    };
-
-    let signed_extrinsic = client.create_signed(add_bytes_call, &amp;signer).await?;
-    let result = client
-        .submit_and_watch_extrinsic(signed_extrinsic, event_decoder)
-        .await?;
-
-    println!(&quot;Result: {:?}&quot;, result);
-
-    Ok(())
-}
 </code></pre></pre>
 <h3><a class="header" href="#with-substrate-api-client" id="with-substrate-api-client">With <code>substrate-api-client</code></a></h3>
 <p>In your Cargo.toml file:</p>
@@ -216,8 +233,10 @@ sp-keyring = { version = &quot;2.0.0&quot;, default-features = false }
 <p>Then in your main.rs:</p>
 <pre><pre class="playground"><code class="language-rust">use sp_core::crypto::Pair;
 use sp_keyring::AccountKeyring;
+use std::{convert::TryFrom, string::String};
 use substrate_api_client::{
-    compose_extrinsic, extrinsic::xt_primitives::UncheckedExtrinsicV4, Api, XtStatus,
+    compose_call, compose_extrinsic_offline, extrinsic::xt_primitives::UncheckedExtrinsicV4,
+    node_metadata::Metadata, Api, XtStatus,
 };
 
 fn main() {
@@ -227,24 +246,54 @@ fn main() {
     // as during compilation the type needs to be defined.
     let signer = AccountKeyring::Bob.pair();
 
-    // this defaults to use 127.0.0.1:9944
+    // sets up api client and retrieves the node metadata
     let api = Api::new(format!(&quot;ws://{}&quot;, url)).set_signer(signer.clone());
+    // gets the current nonce of Bob so we can increment it manually later
+    let mut nonce = api.get_nonce().unwrap();
 
+    // data from the node required in extrinsic
+    let meta = Metadata::try_from(api.get_metadata()).unwrap();
+    let genesis_hash = api.genesis_hash;
+    let spec_version = api.runtime_version.spec_version;
+    let transaction_version = api.runtime_version.transaction_version;
+
+    // Example bytes to add
     let bytes_to_add: Vec&lt;u8&gt; = vec![1, 2, 3, 4];
-    let xt: UncheckedExtrinsicV4&lt;_&gt; = compose_extrinsic!(
-        api.clone(),
-        &quot;TemplateModule&quot;,
-        &quot;ipfs_add_bytes&quot;,
-        bytes_to_add
-    );
-    println!(&quot;Composed Extrinsic:\n {:?}\n&quot;, xt);
+    // Example CID for the example bytes added vec![1, 2, 3, 4]
+    let cid = String::from(&quot;QmRgctVSR8hvGRDLv7c5H7BCji7m1VXRfEE1vW78CFagD7&quot;)
+        .into_bytes()
+        .to_vec();
 
-    let tx_hash = api
-        .send_extrinsic(xt.hex_encode(), XtStatus::Finalized)
-        .unwrap();
-    println!(&quot;Transaction got finalized. Hash: {:?}&quot;, tx_hash);
+    // Create input for all calls
+    let calls = vec![
+        (&quot;ipfs_add_bytes&quot;, bytes_to_add),
+        (&quot;ipfs_cat_bytes&quot;, cid.clone()),
+    ];
+
+    // Create Extinsics and listen for all calls
+    for call in calls {
+        println!(&quot;\n Creating Extrinsic for {}&quot;, call.0);
+        let _call = compose_call!(meta, &quot;TemplateModule&quot;, call.0, call.1);
+        let xt: UncheckedExtrinsicV4&lt;_&gt; = compose_extrinsic_offline!(
+            signer,
+            _call,
+            nonce,
+            Era::Immortal,
+            genesis_hash,
+            genesis_hash,
+            spec_version,
+            transaction_version
+        );
+
+        let blockh = api
+            .send_extrinsic(xt.hex_encode(), XtStatus::Finalized)
+            .unwrap();
+        println!(&quot;Transaction got finalized in block {:?}&quot;, blockh);
+        nonce += 1;
+    }
 }
 </code></pre></pre>
+<p>For full demo with all pallet functions, please visit <a href="https://github.com/whalelephant/offchain_ipfs_api_clients">here</a></p>
 
                     </main>
 
