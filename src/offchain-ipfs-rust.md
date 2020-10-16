@@ -6,7 +6,6 @@ In your Cargo.toml file
 
 ```toml
 [dependencies]
-substrate-subxt = "0.13.0"
 async-std = { version = "1.6.4", features = ["attributes"] }
 codec = { package = "parity-scale-codec", version = "1.3.5", default-features = false, features = ["derive"] }
 substrate-subxt = "0.13.0"
