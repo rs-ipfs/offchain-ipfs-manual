@@ -1,5 +1,12 @@
-# Architectural Explanation
+# The architecture of `offchain::ipfs`
 
-TODO: How does it work?
+As we explained in the introduction, `offchain::ipfs` is currently a fork of
+[`paritytech/substrate`] maintained by [Equilibrium](https://equilibrium.co). This comes
+in the form of the [`offchain_ipfs_bleeding_edge`] branch, continually updated and rebased
+against the upstream repo.
 
-Explain this: <https://github.com/rs-ipfs/substrate/commit/ee328957b3fe9d1b0c9219478af013550a900e59>
+You can see it for yourself in the branch's latest commit, but it might be better if we break it
+down here and explain piece by piece:
+
+[`paritytech/substrate`]: https://github.com/paritytech/substrate
+[`offchain_ipfs_bleeding_edge`]: https://github.com/rs-ipfs/substrate/tree/offchain_ipfs_bleeding_edge
