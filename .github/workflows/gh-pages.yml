@@ -1,0 +1,33 @@
+name: Publish to gh-pages branch
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install rust toolchain
+        uses: hecrj/setup-rust-action@v1.3.4
+          with:
+            rust-version: stable
+            targets: x86_64-unknown-linux-gnu
+
+      - name: Install mdbook
+        run: cargo install mdbook
+
+      - name: Build and push to gh-pages
+        run: |
+          git worktree add /tmp/book gh-pages
+          mdbook build
+          rm -rf /tmp/book/*
+          cp -rp book/* /tmp/book/
+          cd /tmp/book
+          git add -A
+          git commit 'new mdbook render'
+          git push origin gh-pages
+          cd -
