@@ -1,24 +1,29 @@
-## Using the Docker image
+# Using the Docker image
 
-Currently, the recommended way to use `offchain::ipfs` is via the Docker image provided by
-[Equilibrium](https://equilibrium.co).
+The recommended way to use `offchain::ipfs` is via the [eqlabs/substrate-ipfs] image.
 
-Simply pull the [eqlabs/substrate-ipfs] image from Docker Hub:
+## Installing the image
 
 ```bash
+# Pull the image from Docker Hub
 $ docker pull eqlabs/substrate-ipfs
 ```
 
 The image comes with two binaries:
 
-1. `node-template` - which serves as a preview pallet and reference implementation
-2. `substrate-ipfs` - which is the real deal. Substrate infused with IPFS
+1. The default `node-template` serves a preview pallet and reference implementation
+2. `substrate` - the real deal, which you can develop your own pallets against
 
-## Running `node-template`
+The image exposes ports `9944` for WebSockets, `9933` for RPC, `30333` for p2p, and `9615` for
+Prometheus.
 
-By default, the container will execute a command for starting the node-template binary with a
-development chainspec. We expose the default websockets, rpc, p2p and prometheus ports from the
-container to the host machine for interactions.
+## Running the image
+
+The default command for the image is:
+
+`node-template --ws-external --rpc-external --base-path=/substrate-ipfs --dev`
+
+Run the default like so:
 
 ```bash
 $ docker run \
@@ -32,48 +37,7 @@ $ docker run \
     substrate-ipfs
 ```
 
-
-## Running `substrate-ipfs`
-
-```bash
-$ docker run \
-    -p 9944:9944 \            # websockets
-    -p 9933:9933 \            # rpc
-    -p 30333:30333 \          # p2p
-    -p 9615:9615 \            # prometheus
-    -it \
-    --rm \
-    --name sub-ipfs \
-    substrate-ipfs \
-    substrate                 # Override default command
-```
-
-## Container customizations
-
-Several options are already available to tailor your container's runtime to suit your needs.
-
-### Persistent Storage
-
-To run with persistent storage volume between containers, first create a volume:
-
-```bash
-$ docker volume create substrate-ipfs-vol
-```
-
-Then add `-v substrate-ipfs-vol:/substrate-ipfs` to the docker run commands above.
-
-
-### Running a custom command
-
-To overwrite the default container commands, simply add the binary name followed by
-flags, options, or subcommands to the end of the `docker run` command.
-
-### Complete customization example
-
-Putting it all together, a complete command with a persistent volume and a custom
-executable command might look something like this:
-
-For example, to display the help information from `substrate`
+To override the default and run `substrate`, for example:
 
 ```bash
 $ docker run \
@@ -84,8 +48,18 @@ $ docker run \
     -it \
     --rm \
     --name sub-ipfs \
-    -v substrate-ipfs-vol:/substrate-ipfs \       # mounted docker volume
     substrate-ipfs \
-    substrate --help                              # override custom command
+    substrate                 # Override default command
 ```
 
+This will work with any arguments you'd normally pass to `substrate`
+
+### Persistent Storage
+
+To run with persistent storage volume between containers, first create a volume:
+
+```bash
+$ docker volume create substrate-ipfs-vol
+```
+
+Then add `-v substrate-ipfs-vol:/substrate-ipfs` to the docker run commands above.
