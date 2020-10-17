@@ -11,4 +11,5 @@
   - [JavaScript clients](./offchain-ipfs-javascript.md)
 - [Architectural Explanation](./offchain-ipfs-architecture.md)
   - [Building from Source](./building-offchain-ipfs-source.md)
+  - [Substrate Core Modifications](./substrate-core-modifications.md)
 - [Contributing / Development](./contributing-development.md)
