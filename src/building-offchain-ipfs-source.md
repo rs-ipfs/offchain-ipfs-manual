@@ -5,10 +5,10 @@
 ```bash
 $ git clone https://github.com/rs-ipfs/substrate
 $ cd substrate
-$ docker build --file .maintain/Dockerfile --tag substrate-ipfs .
+$ docker build --file .maintain/Dockerfile --tag [your-org/]offchain-ipfs .
 ```
 
-This is a multistage build with the target being an image with name substrate-ipfs:latest
+This is a multistage build with the target being an image with name offchain-ipfs:latest
 containing the substrate binary and the node-template binary.
 
 Note that this will take forever

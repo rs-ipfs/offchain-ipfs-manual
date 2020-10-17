@@ -1,10 +1,11 @@
-# Previewing the functionality with a nice UI
+# Previewing the functionality in a UI
 
-If you’re looking for a quick demo of the functionality, the simplest thing to do is to launch
-the [substrate-frontend-template] UI.
+If you’re looking for a quick demo of the functionality, the simplest thing to do after running the
+Docker container's default command is to launch the [substrate-front-end-template] UI.
 
-First run the docker image via the instructions in the previous section, and then run the 
-following steps:
+## Instructions
+
+1. If you have [node.js] and [yarn] installed on your machine, run the following commands:
 
 ```bash
 $ git clone https://github.com/substrate-developer-hub/substrate-front-end-template
@@ -13,26 +14,29 @@ $ yarn install
 $ yarn start
 ```
 
-This will automatically launch a browser with a UI allowing you to interact with your node's
-capabilities.
+2. Once the UI opens in your browser, scroll down to the **Pallet Interactor** section at the bottom.
+3. Keep the default "Extrinsic" active, then select `templateModule` from the first dropdown.
 
-## Using `offchain::ipfs` via the UI
+<center><img alt="" src="./img/pallet-interactor-1.png" /></center>
 
-Once the browser page opens, scroll to the bottom to the **Pallet Interactor** section.
-Make sure the "Extrinsic" radio button is active, and then select `templateModule` from the
-"Pallets / RPC" dropdown.
+4. Then, select the callable you want from the list of callables that become available:
 
-![Pallet Interactor Screenshot 1](./img/pallet-interactor-1.png)
+<center><img alt="" src="./img/pallet-interactor-2.png" /></center>
 
-Then, select the callable you want from the list of callables that become available:
+5. An additional text field or fields will appear below the last select box. Type the arguments
+in and then click *Signed*.
 
-![Pallet Interactor Screenshot 2](./img/pallet-interactor-2.png)
+<center><img alt="" src="./img/pallet-interactor-3.png" /></center>
 
-Once a callable is selected, an additional text field or fields will appear below the Callables
-select box. Type the arguments in and then click *Signed*. Watch your node logs and also the
-extrinsic events to the right for output and information.
+6. Watch your node logs and also the extrinsic events to the right for
+output and information.
 
-![Pallet Interactor Screenshot 3](./img/pallet-interactor-3.png)
+## Now what?
 
-Read on for a detailed list of callables that `offchain::ipfs` exposes.
+This demo is based on our included `templateModule` pallet - mostly meant as a showcase
+of the embedded [Rust IPFS] node. In the next section we will walk you through this pallet,
+which will be instructive as a reference implementation.
 
+[node.js]: https://nodejs.org
+[yarn]: https://yarnpkg.com
+[substrate-front-end-template]: https://github.com/substrate-developer-hub/substrate-front-end-template

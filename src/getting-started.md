@@ -1,14 +1,14 @@
 # Getting Started
 
-Our [code base] is currently a well-maintained fork of [paritytech/substrate] and will remain so
-until we are confident enough to make a PR proposing its inclusion to Substrate’s core.
+You can get up and running in about 15 minutes by:
 
-In the meantime, and for simplicity’s sake, we are using a Docker image for delivery. Additionally,
-we will cover how to use the baseline [substrate-front-end-template] to quickly preview
-the functionality.
+- Running `offchain::ipfs` via the provided docker image
+- Previewing the functionality via the [substrate-front-end-template]
 
-TODO: Anything else here?
+> **Why a Docker image?**<br />[`offchain::ipfs`] is currently a well-maintained fork of
+[paritytech/substrate]. Until we are ready to make an upstream PR, we are using a Docker image
+for simplicity's sake.
 
-[code base]: https://github.com/rs-ipfs/substrate
+[`offchain::ipfs`]: https://github.com/rs-ipfs/substrate
 [paritytech/substrate]: https://github.com/paritytech/substrate
 [substrate-front-end-template]: https://github.com/substrate-developer-hub/substrate-front-end-template
