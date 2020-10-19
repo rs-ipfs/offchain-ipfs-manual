@@ -15,7 +15,7 @@ Substrate, as a modular framework, provides:
 
 1. Basic **primitives** to compose a blockchain with your desired features
 2. **Clients** (full and light) that allows you to interact with your Substrate blockchain
-3. Several **binaries** both necessary and optional, that you can run or build from source
+3. Several **binaries**, both necessary and optional, that you can run or build from source
 
 There's definitely a lot more to Substrate, but for the purposes of this explanation we'll only
 cover the parts that `offchain::ipfs` augments. At a very high level, we modeled this implementation
