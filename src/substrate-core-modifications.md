@@ -29,7 +29,7 @@ works, or read on for more detail.
 1. User runs one of the binaries, `node`, or `node-template`
     1. That binary includes, in both the full and light clients, an extra `tokio` runtime that
 runs a Rust IPFS node alongside your typical Substrate node runtime.
-3. If the offchain worker is enabled in the configuration, the IPFS runtime will start
+2. If the offchain worker is enabled in the configuration, the IPFS runtime will start
 3. At the same time, the Offchain worker starts, with its own IPFS API embedded within it.
 
 ### Primitives
