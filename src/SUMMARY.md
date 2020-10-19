@@ -9,6 +9,6 @@
     - [Callables reference](./offchain-ipfs-callables.md)
   - [Rust clients](./offchain-ipfs-rust.md)
   - [JavaScript clients](./offchain-ipfs-javascript.md)
-- [Contributing / Development](./contributing-development.md)
+- [Architectural Explanation](./offchain-ipfs-architecture.md)
   - [Building from Source](./building-offchain-ipfs-source.md)
-  - [Architectural Explanation](./offchain-ipfs-architecture.md)
+- [Contributing / Development](./contributing-development.md)
