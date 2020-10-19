@@ -1,0 +1,13 @@
+[package]
+name = "subxt-ipfs"
+version = "0.1.0"
+authors = ["bwty <whalelephant@users.noreply.github.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+codec = { package = "parity-scale-codec", version = "1.3.5", default-features = false, features = ["derive"] }
+substrate-subxt = "0.13.0"
+sp-keyring = { version = "2.0.0", default-features = false }
+async-std = { version = "1.6.4", features = ["attributes"] }

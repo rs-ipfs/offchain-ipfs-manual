@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+	"subxt-ipfs",
+	"sub-api-ipfs"
+]

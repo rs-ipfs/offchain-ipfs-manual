@@ -1,0 +1,38 @@
+name: Run Rust Clients
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+      branches: '*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install rust toolchain
+        uses: hecrj/setup-rust-action@v1.3.4
+        with:
+          rust-version: stable
+          targets: x86_64-unknown-linux-gnu
+
+      - name: Run clients 
+        run: |
+          cd code
+          cargo build
+          ./target/debug/subxt-ipfs
+          ./target/debug/sub-api-ipfs
+
+    services:
+      offchain-ipfs:
+        image: eqlabs/offchain-ipfs
+        ports:
+          - 30330:30330
+          - 9933:9933
+          - 9944:9944
+          - 9615:9615
