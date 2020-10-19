@@ -4,6 +4,7 @@
 
 In your Cargo.toml file
 
+<!-- markdownlint-disable MD013 --> <!-- long line for codec include -->
 ```toml
 [dependencies]
 async-std = { version = "1.6.4", features = ["attributes"] }
@@ -11,6 +12,7 @@ codec = { package = "parity-scale-codec", version = "1.3.5", default-features = 
 substrate-subxt = "0.13.0"
 sp-keyring = { version = "2.0.0", default-features = false }
 ```
+<!-- markdownlint-restore -->
 
 Then in your main.rs:
 
@@ -77,7 +79,7 @@ In your Cargo.toml file:
 [dependencies]
 substrate-api-client = { git = "https://github.com/scs/substrate-api-client.git" }
 sp-core = { version = "2.0.0", features = ["full_crypto"] }
-sp-keyring = { version = "2.0.0", default-features = false } 
+sp-keyring = { version = "2.0.0", default-features = false }
 ```
 
 Then in your main.rs:
@@ -94,8 +96,8 @@ use substrate_api_client::{
 fn main() {
     // instantiate an Api that connects to the given address
     let url = "127.0.0.1:9944";
-    // if no signer is set in the whole program, we need to give to Api a specific type instead of an associated type
-    // as during compilation the type needs to be defined.
+    // if no signer is set in the whole program, we need to give to Api a specific
+    // type instead of an associated type as during compilation the type needs to be defined.
     let signer = AccountKeyring::Bob.pair();
 
     // sets up api client and retrieves the node metadata
@@ -145,4 +147,5 @@ fn main() {
     }
 }
 ```
+
 For full demo with all pallet functions, please visit [here](https://github.com/whalelephant/offchain_ipfs_api_clients)

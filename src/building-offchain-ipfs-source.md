@@ -3,9 +3,9 @@
 ## Building the docker image from source
 
 ```bash
-$ git clone https://github.com/rs-ipfs/substrate
-$ cd substrate
-$ docker build --file .maintain/Dockerfile --tag [your-org/]offchain-ipfs .
+git clone https://github.com/rs-ipfs/substrate
+cd substrate
+docker build --file .maintain/Dockerfile --tag [your-org/]offchain-ipfs .
 ```
 
 This is a multistage build with the target being an image with name offchain-ipfs:latest
@@ -16,10 +16,10 @@ Note that this will take forever
 ## Running the node from source
 
 ``` bash
-$ git clone https://github.com/rs-ipfs/substrate
-$ cd substrate
-$ git checkout offchain_ipfs
-$ cargo build --workspace
+git clone https://github.com/rs-ipfs/substrate
+cd substrate
+git checkout offchain_ipfs
+cargo build --workspace
 ```
 
 And get a coffee…

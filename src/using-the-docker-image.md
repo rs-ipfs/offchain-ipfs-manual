@@ -62,7 +62,7 @@ This will work with any arguments you'd normally pass to `substrate`
 To run with persistent storage volume between containers, first create a volume:
 
 ```bash
-$ docker volume create offchain-ipfs-vol
+docker volume create offchain-ipfs-vol
 ```
 
 Then add `-v offchain-ipfs-vol:/offchain-ipfs` to the docker run commands above.

@@ -2,11 +2,11 @@
 
 This should work in both node.js and the browser via a bundler like Webpack or Parcel.
 
-# With polkadot.js
+## With polkadot.js
 
 ```bash
-$ yarn init
-$ yarn add @polkadot/api
+yarn init
+yarn add @polkadot/api
 ```
 
 ```javascript
@@ -77,8 +77,8 @@ const logEvents = ({ status, events }) => {
 ```
 
 ### Debugging JSON-RPC in the browser
+
 You will connect to the blockchain node via JSON-RPC over WebSockets., On page load it will
 connect to port 9944 via WebSockets.
 
 One good way to monitor the streaming results in the browser is to use devtools:
-
