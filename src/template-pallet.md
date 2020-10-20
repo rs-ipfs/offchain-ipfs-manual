@@ -125,7 +125,7 @@ In practice, this means you must implement `decl_` macros:
 
 ### `decl_storage!`
 
-Here, we define the data that will actually be stored on-chain as **extrinsics**.
+Here, we define the data that will actually be stored on-chain when calling **extrinsics**.
 
 Since the offchain-worker can't perform I/O outside of the wasm context, we store our requests as
 queues, to be processed on a periodic basis, consumed, and ultimately performed by the native
@@ -149,10 +149,9 @@ decl_storage! {
 
 ### `decl_event!`
 
-This is where we define what those events are, when they happen, and what they contain.
+This is where we define what those events are and what they contain.
 
-Once a command is received by the off-chain worker, the corresponding handler from the `decl_module!`
-section will "deposit" the event in its storage, to be processed by the native runtime.
+Once a command is sent to the off-chain worker, one of the following chain events is emitted.
 
 ```rust,ignore
 // The pallet's events

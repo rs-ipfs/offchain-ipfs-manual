@@ -33,7 +33,7 @@ values will be _eventually_ emitted returned in the runtime logs, which you'll n
 
 ### `ipfs_add_bytes`
 
-Adds the given bytes to the IPFS repository
+Adds the given bytes to the IPFS repository.
 
 **Frequency:** Every other block<br />
 **Weight**: 200,000<br />
