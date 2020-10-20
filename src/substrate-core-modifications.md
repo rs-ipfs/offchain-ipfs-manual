@@ -9,7 +9,7 @@ perhaps improve upon them yourself.
 [`paritytech/substrate`]: https://github.com/paritytech/substrate
 [`offchain_ipfs`]: https://github.com/rs-ipfs/substrate/tree/offchain_ipfs
 
-## How is Substrate itself organized
+## How Substrate is organized
 
 Substrate, as a modular framework, provides:
 
