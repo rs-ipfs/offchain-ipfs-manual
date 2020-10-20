@@ -1,5 +1,14 @@
 # Substrate core modifications
 
+Every one of `offchain::ipfs`'s functional modifications to the [`paritytech/substrate`] core are
+encapsulated in a single commit on the [`offchain_ipfs`] branch of our repo.
+
+In this section we'll walk through these modifications so that you may understand them, and
+perhaps improve upon them yourself.
+
+[`paritytech/substrate`]: https://github.com/paritytech/substrate
+[`offchain_ipfs`]: https://github.com/rs-ipfs/substrate/tree/offchain_ipfs
+
 ## How is Substrate itself organized?
 
 Substrate, as a modular framework, provides:
@@ -9,7 +18,11 @@ Substrate, as a modular framework, provides:
 3. Several **binaries** both necessary and optional, that you can run or build from source
 
 There's definitely a lot more to Substrate, but for the purposes of this explanation we'll only
-cover the parts that `offchain::ipfs` augments.
+cover the parts that `offchain::ipfs` augments. At a very high level, we modeled this implementation
+after the existing [`offchain::http`] module. You can look that over to get a sense of how it all
+works, or read on for more detail.
+
+[`offchain::http`]: https://github.com/paritytech/substrate/blob/master/client/offchain/src/api/http.rs
 
 ## `offchain::ipfs` lifecycle
 
