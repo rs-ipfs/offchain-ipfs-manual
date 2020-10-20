@@ -30,6 +30,4 @@ Refer to the **[Using the Docker image]** section of for information about runni
 
 [Using the Docker image]: ./using-the-docker-image.md
 
-
-
 Read on to learn about the modifications in the `offchain_ipfs` branch, and what they do.
