@@ -22,78 +22,45 @@ cover the parts that `offchain::ipfs` augments. At a very high level, we modeled
 after the existing [`offchain::http`] module. You can look that over to get a sense of how it all
 works, or read on for more detail.
 
+From here on, most of the links will be to code points within the [`offchain_ipfs`] branch of the
+`offchain::ipfs` repo.
+
+[`offchain::ipfs`]: https://github.com/rs-ipfs/substrate
 [`offchain::http`]: https://github.com/paritytech/substrate/blob/master/client/offchain/src/api/http.rs
 
 ## `offchain::ipfs` lifecycle
 
-1. User runs one of the binaries, `node`, or `node-template`
-    1. That binary includes, in both the full and light clients, an extra `tokio` runtime that
-runs a Rust IPFS node alongside your typical Substrate node runtime.
-2. If the offchain worker is enabled in the configuration, the IPFS runtime will start
-3. At the same time, the Offchain worker starts with its own IPFS API embedded within it.
+1. User runs one of the binaries, [`node`], or [`node-template`] which launches a Substrate runtime.
+2. If the offchain worker is enabled in the configuration, a secondary runtime will start in both
+the [full client] and [light client] to power the IPFS node.
+3. The offchain worker starts, exposing its functionality to any pallets that wish to access it.*
+4. If your node is configured to processes user input via a pallet, then users will make requests,
+typically in the form of **extrinsics** called via JSON-RPC. A typical call goes something like:
+    1. The JSON-RPC handler inside the pallet will store IPFS requests inside a storage queue.
 
-### Primitives
 
-#### Core
 
-- `primitives/core/src/offchain/testing.rs`
-  - Adds `IpfsRequest`, `IpfsRequestId`, `IpfsRequestStatus`, `IpfsResponse`
-  - Defines `IpfsPendingRequest`
-  - Adds pending `ipfs_requests` and `expected_ipfs_requests` to `OffchainState`
-  - Defines its own `ipfs_request_start` and `ipfs_response_wait`
-- `primitives/core/src/offchain/mod.rs`
-  - Defines `IpfsRequest` and `IpfsResponse` enums
-  - What is IPFS = 254, Capability, ok.. what does it mean to have 255?
-  - Defines its own `ipfs_request_start` and `ipfs_response_wait`
-    - On Externalities trait of Box&lt;T&gt; and LimitedExternalities
-    - uses `Capability::Ipfs`
-
-#### Runtime
-
-- `primitives/runtime/src/offchain/ipfs.rs`
-  - high-level helpers for making IPFS requests from Offchain Workers.
-  - Defines `PendingRequest` and `Response` and how the former becomes the latter (or an Error)
-
-#### I/O
-
-- `primitives/io/src/lib.rs`
-  - Adds `IpfsRequest`, `IpfsRequestId`
-  - Defines the `ipfs_request_start`, and `ipfs_response_wait` functions
-
-### Client
-
-- `client/service/src/builder.rs`
-  - Adds a new async runtime here for ipfs to both the full and light clients
-- `client/service/src/task_manager/mod.rs`
-  - adds public `ipfs_rt` field to the task manager
+[full client]: https://github.com/rs-ipfs/substrate/blob/offchain_ipfs_docker/client/service/src/builder.rs#L266
+[light client]: https://github.com/rs-ipfs/substrate/blob/offchain_ipfs_docker/client/service/src/builder.rs#L333
+[`node`]: https://github.com/rs-ipfs/substrate/tree/offchain_ipfs_docker/bin/node/cli
+[`node-template`]: https://github.com/rs-ipfs/substrate/tree/offchain_ipfs_docker/bin/node-template
 
 #### Offchain Client
 
 Lots of stuff here too
 
-- `client/offchain/Cargo.toml`
-  - Adds tokio
+Sends calls to/from offchain worker:
+
 - `client/offchain/src/api/ipfs.rs`
   - `IpfsApi` and `IpfsWorker`
   - Big part of the implementation here
+
 - `client/offchain/src/api.rs`
   - uses `IpfsRequest`, `IpfsRequestId`, and `IpfsRequestStatus`
   - defines `ipfs_request_start`
   - Includes ipfs
   - Runs the node API
 - `client/offchain/src/lib.rs`
-
-### Binaries
-
-#### `node`
-
-- `bin/node/cli/src/service.rs`
-  - integrates `task_manager.ipfs_rt` from client
-
-#### `node-template`
-
-- `bin/node-template/node/src/service.rs`
-  - integrates `task_manager.ipfs_rt` from client
 
 ### Types
 
@@ -187,3 +154,44 @@ visible and listened to addresses.
 - `Peers(Vec<OpaqueMultiaddr>)` - The list of currently connected peers.
 - `RemoveBlock(Vec<u8>)` - The Cid of the removed block.
 - `Success` - A request was processed successfully and there is no extra value to return.
+### Binaries
+
+#### `node`
+
+- `bin/node/cli/src/service.rs`
+  - integrates `task_manager.ipfs_rt` from client
+
+#### `node-template`
+
+- `bin/node-template/node/src/service.rs`
+  - integrates `task_manager.ipfs_rt` from client
+
+### Primitives
+
+#### Core
+
+- `primitives/core/src/offchain/testing.rs`
+  - Adds `IpfsRequest`, `IpfsRequestId`, `IpfsRequestStatus`, `IpfsResponse`
+  - Defines `IpfsPendingRequest`
+  - Adds pending `ipfs_requests` and `expected_ipfs_requests` to `OffchainState`
+  - Defines its own `ipfs_request_start` and `ipfs_response_wait`
+- `primitives/core/src/offchain/mod.rs`
+  - Defines `IpfsRequest` and `IpfsResponse` enums
+  - What is IPFS = 254, Capability, ok.. what does it mean to have 255?
+  - Defines its own `ipfs_request_start` and `ipfs_response_wait`
+    - On Externalities trait of Box&lt;T&gt; and LimitedExternalities
+    - uses `Capability::Ipfs`
+
+#### Runtime
+
+- `primitives/runtime/src/offchain/ipfs.rs`
+  - high-level helpers for making IPFS requests from Offchain Workers.
+  - Defines `PendingRequest` and `Response` and how the former becomes the latter (or an Error)
+
+#### I/O
+
+- `primitives/io/src/lib.rs`
+  - Adds `IpfsRequest`, `IpfsRequestId`
+  - Defines the `ipfs_request_start`, and `ipfs_response_wait` functions
+
+
