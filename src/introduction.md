@@ -2,7 +2,10 @@
 
 `offchain::ipfs` is [Substrate], infused with [IPFS].
 
-By including [Rust IPFS](https://github.com/rs-ipfs/rust-ifps) in the native
+> **Substrate** is a blockchain framework built in Rust, with off-chain worker capabilities.
+<br />**IPFS** is a distributed file storage network, connecting peers and their content.
+
+By including [the Rust implementation IPFS](https://github.com/rs-ipfs/rust-ifps) in the native
 Substrate runtime, and by allowing pass-through wasm calls via Substrate's
 [Off-chain Workers], we enable a powerful and familiar subset of the IPFS APIs, including:
 
@@ -13,6 +16,8 @@ Substrate runtime, and by allowing pass-through wasm calls via Substrate's
 - `ipfs swarm connect` / `disconnect` - Swarm with other IPFS peers
 - `ipfs pin add` / `rm` - Pin and unpin content
 
+`offchain::ipfs` allows you to account for your data transactions and DHT status in the blockchain.
+These on-chain insights can serve as a foundation for incentivized data storage and replication.
 This means _no separate executable_: both blockchain and distributed storage are together in one.
 
 The `offchain::ipfs` Manual is the documentation of our efforts, as well as useful explanations
